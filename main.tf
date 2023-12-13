@@ -41,15 +41,13 @@ resource "azurerm_servicebus_subscription" "subscription_id_1" {
   topic_id           = azurerm_servicebus_topic.topic_id_1.id
   max_delivery_count = 1
   default_message_ttl = "PT10S"
-  auto_delete_on_idle = "PT30M"
+  dead_lettering_on_message_expiration = true
 }
 
 resource "azurerm_servicebus_queue" "queue_1" {
   name                = "${var.prefix}-sbqueue"
   namespace_id        = azurerm_servicebus_namespace.namespace.id
   enable_partitioning = true
-  dead_lettering_on_message_expiration = true
-  
 }
 
 resource "azurerm_servicebus_queue_authorization_rule" "queue_auth_rule" {
