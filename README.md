@@ -34,6 +34,40 @@ docker build
 ``` 
 docker build -t your-image-name:tag .
 ```
+- Set up a Azure container registry
+
+```
+az acr create --resource-group myTFResourceGroup --name mydesiredcontainerregistryname --sku Basic
+```
+
+- Check acr list
+
+```
+az acr list --output table                 
+az acr check-name --name mydesiredcontainerregistryname
+```
+
+- Import Docker image into azure container registry
+
+```
+docker login mydesiredcontainerregistryname.azurecr.io
+
+docker build -t 
+mydesiredcontainerregistryname.azurecr.io/
+grpc-image:tag .
+
+docker push mydesiredcontainerregistryname.azurecr.io/grpc-image:tag  
+```
+
+- Set up authority of ACR
+
+```
+kubectl create secret docker-registry mydesiredcontainerregistryname-cred \
+  --docker-server=mydesiredcontainerregistryname.azurecr.io \
+  --docker-username=mydesiredcontainerregistryname \
+  --docker-password=uIOjUZgKzhflUgf+YxjKjlectYLA91wcxng4bSirJP+ACRAmtlEk \
+  --docker-email=louis.niuniu@outlook.com
+```
 
 Kubernetes Service deploy
 
@@ -53,5 +87,7 @@ kubectl apply -f service.yaml
 - LoadBalancer's external IP
 
 ```
-kubectl get svc your-app
+kubectl get svc grpc-app
 ```
+## Test
+curl -X POST -k http://20.113.48.77:80/v1/example/echo -d '{"name": " hello"}'  
